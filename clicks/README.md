@@ -1,4 +1,4 @@
-## How to implement Moonshot's ValueTrack
+## How to implement Moonshot's Click Data - PHP-SDK
 
 
 ##### 1. Upload the msvt.php:
