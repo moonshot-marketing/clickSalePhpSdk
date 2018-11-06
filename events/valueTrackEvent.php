@@ -42,14 +42,16 @@ class EventData
     private $valueTrackId,
     $event,
     $value,
+    $provider,
     $extraData,
         $trackerVersion;
 
-    public function __construct(int $valueTrackId, string $event, float $value, array $extraData)
+    public function __construct(int $valueTrackId, string $event, float $value, string $provider, array $extraData)
     {
         $this->valueTrackId = $valueTrackId;
         $this->event = $event;
         $this->value = $value;
+        $this->provider = $provider;
         $this->trackerVersion = "php/v1.0";
         $this->extraData = $extraData;
     }
@@ -61,6 +63,7 @@ class EventData
         $dataObject["valuetrack_id"] = $this->valueTrackId;
         $dataObject["event"] = $this->event;
         $dataObject["value"] = $this->value;
+        $dataObject["provider"] = $this->provider;
         $dataObject["trackerVersion"] = $this->trackerVersion;
         $dataObject["extra"] = $this->extraData;
 
@@ -75,6 +78,7 @@ class ValueTrackEventHandler
     public $event,
     $valueTrackId,
     $value,
+    $provider,
         $extraData;
 
     public function __construct($valueTrackId)
@@ -82,6 +86,7 @@ class ValueTrackEventHandler
         $this->valueTrackId = intval($valueTrackId);
         $this->extraData = array();
         $this->value = .0;
+        $this->provider = null;
         $this->postHandler = new PostDataHandler();
 
     }
@@ -93,7 +98,7 @@ class ValueTrackEventHandler
 
     public function setProvider($provider)
     {
-        $this->extraData["provider"] = $provider;
+        $this->provider = $provider;
     }
 
     public function setValue($value)
@@ -118,6 +123,7 @@ class ValueTrackEventHandler
                 $this->valueTrackId,
                 $this->event,
                 $this->value,
+                $this->provider,
                 $this->extraData
             );
 
