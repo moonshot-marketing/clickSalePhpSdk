@@ -1,9 +1,9 @@
-## How to implement Moonshot's Click Data - PHP-SDK
+## How to implement Moonshot's clicks data - PHP-SDK
 
 
-##### 1. Upload the msvt.php:
+##### 1. Upload the valueTrackClick.php:
 
-Upload the msvt.php file to your server.
+Upload the valueTrackClick.php file to your server.
 
 
 ##### 2. Implementation:
@@ -11,16 +11,22 @@ Upload the msvt.php file to your server.
 In Your ppc landing page add the following code:
 
     ````
-        include_once('{path to your file}/msvt.php');
+        include_once('{path to your file}/valueTrackClick.php');
 
-        // create new ValueTrack object
-        $vt = new ValueTrack();
+        // create new ValueTrackClickHandler object
+        $vt = new ValueTrackClickHandler();
 
-        // set the Project name
-        $vt->set_project_name('{your project name as given by us}');
+        // set the project name - Required
+        $vt->setProjectName('{your project name as given by us}');
 
-        // set property to catch only google adwords data
-        $vt->add_include_param('gclid');
+        // set property to catch only google adwords data - Optional
+        $vt->addIncludeParameter('gclid');
+
+        // set property to abort action - Optional
+        $vt->addExcludeParameter('go');
+
+        // add extra data - Optional
+        $vt->addSiteParameter('brandsPosition', array("A", "B", "C"));
 
         // execute
         $id = $vt->execute();

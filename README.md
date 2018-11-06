@@ -1,5 +1,5 @@
-## Moonshot's Click And Sale Data PHP-SDK
+## Moonshot's click and events data PHP-SDK
 
 
-Click - [a relative link](clicks/README.md)
-Sale - [a relative link](sales/README.md)
+Clicks - [a relative link](clicks/README.md)
+Events - [a relative link](events/README.md)
