@@ -103,16 +103,16 @@ class PostDataHandler
 
 class ClickData
 {
-    private $projectId,
+    private $website,
     $finalUrl,
     $referrerFinalUrl,
     $userAgent,
     $trackerVersion,
         $siteParameters;
 
-    public function __construct(string $projectId, array $siteParameters)
+    public function __construct(string $website, array $siteParameters)
     {
-        $this->projectId = $projectId;
+        $this->website = $website;
         $this->finalUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $this->referrerFinalUrl = $this->getReferrer();
         $this->userAgent = $this->getUserAgent();
@@ -150,7 +150,7 @@ class ClickData
     {
         $dataObject = array();
 
-        $dataObject["projectId"] = $this->projectId;
+        $dataObject["website"] = $this->website;
         $dataObject["finalUrl"] = $this->finalUrl;
         $dataObject["referrerFinalUrl"] = $this->referrerFinalUrl;
         $dataObject["userAgent"] = $this->userAgent;
@@ -165,12 +165,12 @@ class ClickData
 class ValueTrackClickHandler
 {
 
-    public $projectName,
+    public $website,
         $valueTrackId;
 
-    public function __construct(string $projectName = null)
+    public function __construct(string $website = null)
     {
-        $this->projectName = $projectName;
+        $this->website = $website;
         $this->valueTrackId = 0;
 
         $this->excludeParameters = array();
@@ -200,14 +200,14 @@ class ValueTrackClickHandler
         return false;
     }
 
-    public function setProjectName($projectName)
+    public function setWebsite($website)
     {
         /*
-        set project name
-        :param project name: {string} the project name
+        set website name
+        :param website name: {string} the website name
         :return:
          */
-        $this->projectName = $projectName;
+        $this->website = $website;
     }
 
     public function addExcludeParameter($key)
@@ -273,11 +273,11 @@ class ValueTrackClickHandler
         // first check if has query params
         if ($this->hasQueryParameters()) {
 
-            if (!isset($this->projectName)) {
-                die("Project name is missing!");
+            if (!isset($this->website)) {
+                die("website name is missing!");
             }
 
-            $clickObject = new ClickData($this->projectName, $this->siteParameters);
+            $clickObject = new ClickData($this->website, $this->siteParameters);
 
             // check include parameters
             // this script will continue only if user has one of the include parameters

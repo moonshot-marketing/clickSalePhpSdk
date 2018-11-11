@@ -16,8 +16,8 @@ In Your ppc landing page add the following code:
         // create new ValueTrackClickHandler object
         $vt = new ValueTrackClickHandler();
 
-        // set the project name - Required
-        $vt->setProjectName('{your project name as given by us}');
+        // set website - Required
+        $vt->setWebsite('{website name as given by us}');
 
         // set property to catch only google adwords data - Optional
         $vt->addIncludeParameter('gclid');

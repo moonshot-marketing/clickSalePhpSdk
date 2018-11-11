@@ -23,8 +23,8 @@ add the following code:
             // create new Sales Object
             $event = new ValueTrackEventHandler((int)$sessionValueTrackId);
 
-            // Set the event type - required
-            $event->setEventType('{event}');
+            // Set the event name - required
+            $event->setEventName('{event}');
 
             // set the provider name - optional
             $event->setProvider('{your project name}');

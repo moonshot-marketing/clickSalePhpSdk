@@ -83,6 +83,7 @@ class ValueTrackEventHandler
 
     public function __construct($valueTrackId)
     {
+        $this->event = null;
         $this->valueTrackId = intval($valueTrackId);
         $this->extraData = array();
         $this->value = .0;
@@ -91,7 +92,7 @@ class ValueTrackEventHandler
 
     }
 
-    public function setEventType($event)
+    public function setEventName($event)
     {
         $this->event = $event;
     }
@@ -115,7 +116,7 @@ class ValueTrackEventHandler
     {
 
         if (empty($this->event) || !isset($this->event)) {
-            die("event type is required");
+            die("event name is required");
             return false;
         } else {
 
