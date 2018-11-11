@@ -29,8 +29,8 @@ add the following code:
             // set the provider name - optional
             $event->setProvider('{your project name}');
 
-            // set revenue - optional
-            $event->set_revenue({revenue});
+            // set value - optional
+            $event->setValue({revenue});
 
             // add extra prameter - optional
             $event->addExtraParameter("test_var", 1);
