@@ -87,7 +87,7 @@ class PostDataHandler
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-type: application/json',
             ));
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dataObject));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dataObject, JSON_FORCE_OBJECT));
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
