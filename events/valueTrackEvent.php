@@ -88,7 +88,7 @@ class ValueTrackEventHandler
         $this->extraData = array();
         $this->value = .0;
         $this->provider = null;
-        $this->postHandler = new PostDataHandler();
+        $this->postHandler = new EventPostDataHandler();
 
     }
 
