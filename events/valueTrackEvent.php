@@ -5,7 +5,7 @@ date_default_timezone_set("UTC");
 
 define('EVENT_API_HOST', "https://vt-production.valuetrackbi.com/api/event");
 
-class PostDataHandler
+class EventPostDataHandler
 {
 
     public function exec($dataObject)
