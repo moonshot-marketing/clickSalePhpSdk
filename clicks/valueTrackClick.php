@@ -181,9 +181,16 @@ class ValueTrackClickHandler
         $this->cookieHandler = new CookiesHandler();
 
         $this->urlQueryParameters = array();
-        parse_str(parse_url(
+        $urlElements = parse_url(
             (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"
-        )['query'], $this->urlQueryParameters);
+        );
+        if (isset($urlElements) && isset($urlElements["query"])) {
+            parse_str($urlElements['query'], $this->urlQueryParameters);
+        }
+
+        $this->referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "unknown";
+        $this->ref = $this->detectReferrer($this->referrer);
+
     }
 
     private function hasQueryParameters()
@@ -293,9 +300,8 @@ class ValueTrackClickHandler
                             return $this->cookieHandler->get();
                         }
 
-                        $ref = $this->detectReferrer($clickObject["referrerFinalUrl"]);
-                        $this->cookieHandler->put($ref);
-                        return $ref;
+                        $this->cookieHandler->put($this->ref);
+                        return $this->ref;
                     }
                 }
             }
@@ -309,9 +315,8 @@ class ValueTrackClickHandler
                         return $this->cookie_handler->get();
                     }
 
-                    $ref = $this->detectReferrer($clickObject["referrerFinalUrl"]);
-                    $this->cookieHandler->put($ref);
-                    return $ref;
+                    $this->cookieHandler->put($this->ref);
+                    return $this->ref;
                 }
             }
 
@@ -331,22 +336,14 @@ class ValueTrackClickHandler
                     return $id;
 
                 } else {
-
-                    $ref = $this->detectReferrer($clickObject["referrerFinalUrl"]);
-                    $this->cookieHandler->put($ref);
-                    return $ref;
-
+                    $this->cookieHandler->put($this->ref);
+                    return $this->ref;
                 }
 
             } else {
-                $ref = $this->detectReferrer($clickObject["referrerFinalUrl"]);
-                $this->cookieHandler->put($ref);
-                return $ref;
+                $this->cookieHandler->put($this->ref);
+                return $this->ref;
             }
-
-            $ref = $this->detectReferrer($clickObject["referrerFinalUrl"]);
-            $this->cookieHandler->put($ref);
-            return $ref;
 
         } else {
 
@@ -356,9 +353,8 @@ class ValueTrackClickHandler
                 return $this->cookieHandler->get();
             }
 
-            $ref = $this->detectReferrer($clickObject["referrerFinalUrl"]);
-            $this->cookieHandler->put($ref);
-            return $ref;
+            $this->cookieHandler->put($this->ref);
+            return $this->ref;
         }
     }
 }
