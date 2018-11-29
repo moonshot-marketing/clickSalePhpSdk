@@ -7,7 +7,7 @@ define('EVENT_API_HOST', "https://vt-production.valuetrackbi.com/api/event");
 
 class EventPostDataHandler
 {
-
+    public $log = [];
     public function exec($dataObject)
     {
         /*
@@ -18,7 +18,9 @@ class EventPostDataHandler
         try {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, EVENT_API_HOST);
-
+            curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+            curl_setopt($curl, CURLOPT_VERBOSE, 1);
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-type: application/json',
@@ -28,11 +30,17 @@ class EventPostDataHandler
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($curl);
+            if ($response === false) {
+              $this->log[] = curl_error($curl);
+              $obj = new stdClass;
+              $obj->success = false;
+              return $obj;
+            }
             curl_close($curl);
 
             return $response;
         } catch (Exception $e) {
-            //
+            $this->log[] = curl_error($curl);
         }
     }
 }
@@ -136,15 +144,29 @@ class ValueTrackEventHandler
                 if ($response->success) {
                     return true;
                 } else {
+                    $this->addLog("vt failed - http request failed (response status is not success)",  $response);
                     trigger_error($response->reason, E_USER_NOTICE);
                     return false;
                 }
 
             } else {
+                $this->addLog("vt failed - http request failed (response status is not success)",  $response);
                 trigger_error("Error", E_USER_NOTICE);
                 return false;
             }
         }
 
+    }
+
+    public function getLog() {
+        return $this->log;
+    }
+
+    private function addLog($msg, $response = "") {
+        $obj = new stdClass;
+        $obj->msg = $msg;
+        $obj->data = json_encode($this);
+        $obj->response = json_encode($response);
+        $this->log[] = $obj;
     }
 }

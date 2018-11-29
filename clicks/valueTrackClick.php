@@ -71,7 +71,7 @@ class CookiesHandler
 
 class PostDataHandler
 {
-
+    public $log = [];
     public function exec($dataObject)
     {
         /*
@@ -82,7 +82,9 @@ class PostDataHandler
         try {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, API_HOST);
-
+            curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+            curl_setopt($curl, CURLOPT_VERBOSE, 1);
             curl_setopt($curl, CURLOPT_POST, true);
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-type: application/json',
@@ -92,11 +94,17 @@ class PostDataHandler
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($curl);
+            if ($response === false) {
+              $this->log[] = curl_error($curl);
+              $obj = new stdClass;
+              $obj->success = false;
+              return $obj;
+            }
             curl_close($curl);
 
             return $response;
         } catch (Exception $e) {
-            //
+            $this->log[] = curl_error($curl);
         }
     }
 }
@@ -166,12 +174,13 @@ class ValueTrackClickHandler
 {
 
     public $website,
-        $valueTrackId;
+        $valueTrackId, $log;
 
     public function __construct(string $website = null)
     {
         $this->website = $website;
         $this->valueTrackId = 0;
+        $this->log = [];
 
         $this->excludeParameters = array();
         $this->includeParameters = array();
@@ -274,6 +283,11 @@ class ValueTrackClickHandler
         return $ref;
     }
 
+    public function getLog() {
+        return $this->log;
+    }
+
+
     public function execute()
     {
 
@@ -301,6 +315,7 @@ class ValueTrackClickHandler
                         }
 
                         $this->cookieHandler->put($this->ref);
+                        $this->addLog("vt failed - include params");
                         return $this->ref;
                     }
                 }
@@ -316,6 +331,7 @@ class ValueTrackClickHandler
                     }
 
                     $this->cookieHandler->put($this->ref);
+                    $this->addLog("vt failed - exclude params");
                     return $this->ref;
                 }
             }
@@ -336,11 +352,13 @@ class ValueTrackClickHandler
                     return $id;
 
                 } else {
+                    $this->addLog("vt failed - http request failed (response status is not success)",  $response);
                     $this->cookieHandler->put($this->ref);
                     return $this->ref;
                 }
 
             } else {
+                $this->addLog("vt failed - http request failed", $response);
                 $this->cookieHandler->put($this->ref);
                 return $this->ref;
             }
@@ -350,11 +368,19 @@ class ValueTrackClickHandler
             // if has cookie
 
             if ($this->cookieHandler->get()) {
+              $this->addLog("vt failed - has cookie");
                 return $this->cookieHandler->get();
             }
-
+            $this->addLog("vt failed - no cookie found");
             $this->cookieHandler->put($this->ref);
             return $this->ref;
         }
+    }
+    private function addLog($msg, $response = "") {
+        $obj = new stdClass;
+        $obj->msg = $msg;
+        $obj->data = json_encode($this);
+        $obj->response = json_encode($response);
+        $this->log[] = $obj;
     }
 }
