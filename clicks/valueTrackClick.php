@@ -326,8 +326,8 @@ class ValueTrackClickHandler
             foreach ($this->urlQueryParameters as $k => $v) {
                 if (in_array($k, $this->excludeParameters)) {
                     // has a cookie
-                    if ($this->cookie_handler->get()) {
-                        return $this->cookie_handler->get();
+                    if ($this->cookieHandler->get()) {
+                        return $this->cookieHandler->get();
                     }
 
                     $this->cookieHandler->put($this->ref);
