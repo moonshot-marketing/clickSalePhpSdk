@@ -89,7 +89,7 @@ class PostDataHandler
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-type: application/json',
             ));
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dataObject, JSON_FORCE_OBJECT));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dataObject));
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -304,10 +304,11 @@ class ValueTrackClickHandler
             // this script will continue only if user has one of the include parameters
 
             if (count($this->includeParameters) > 0) {
-
+                $hasOne = false;
                 foreach ($this->includeParameters as $k => $v) {
 
-                    if (array_key_exists($v, $this->urlQueryParameters)) {
+                    if (array_key_exists($v, $this->urlQueryParameters) || $hasOne) {
+                        $hasOne = true;
                         continue;
                     } else {
                         if ($this->cookieHandler->get()) {
